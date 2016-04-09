@@ -7,6 +7,7 @@
 //
 
 #import "interpretation_of_clinical_pathway_and_therapeutic_drugsAppDelegate.h"
+#import "EnterViewController.h"
 
 @implementation interpretation_of_clinical_pathway_and_therapeutic_drugsAppDelegate
 
@@ -16,6 +17,22 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];
+
+    /**标签控制
+//    EnterViewController * enterController = [[EnterViewController alloc]initWithNibName:@"EnterViewController" bundle:nil];
+//    tabBarController = [[UITabBarController alloc]init];
+//    tabBarController.viewControllers = [NSArray arrayWithObjects:tabBarController,enterController,nil];
+//    [self.window addSubview:tabBarController.view];
+    **/
+   
+#pragma mark goToNextPage ---- rootViewController
+    
+    //直接进入
+    EnterViewController * enterController = [[EnterViewController alloc]initWithNibName:@"EnterViewController" bundle:nil];
+    self.window.rootViewController = enterController;
+    
+    [self readyDatabase:@"medical_books.sqlite"];
+    
     return YES;
 }
 
@@ -46,4 +63,36 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+#pragma mark tabBarDelegate
+- (void)tabBar:(UITabBar *)tabBar didSelectItem:(UITabBarItem *)item
+{
+    if(item.tag == 1){
+        NSLog(@"TestOneController");
+    }else if(item.tag == 2){
+        NSLog(@"TestTwoController");
+    }else {
+        NSLog(@"TestThirdController");
+    }
+}
+
+#pragma mark write DB to shahe
+- (NSString*) readyDatabase:(NSString*)dbName{
+    BOOL sucess;
+    NSFileManager* fileManager = [NSFileManager defaultManager];
+    NSError* error;
+    NSArray* paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString* documentsDirectory = [paths objectAtIndex:0];
+    NSString* writableDBPath = [documentsDirectory stringByAppendingPathComponent:dbName];
+    sucess = [fileManager fileExistsAtPath:writableDBPath];
+    NSLog(@"write path:%@",writableDBPath);
+    if (!sucess) {
+        NSString* defaultDBPath = [[[NSBundle mainBundle]resourcePath]stringByAppendingPathComponent:dbName];
+        sucess = [fileManager copyItemAtPath:defaultDBPath toPath:writableDBPath error:&error];
+        if (!sucess) {
+            NSAssert1(0, @"Failed to create writable database file with message '%@'",[error localizedDescription]);
+        }
+    }
+    
+    return NULL;
+}
 @end

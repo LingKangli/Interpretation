@@ -8,8 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface interpretation_of_clinical_pathway_and_therapeutic_drugsAppDelegate : UIResponder <UIApplicationDelegate>
+@interface interpretation_of_clinical_pathway_and_therapeutic_drugsAppDelegate : UIResponder <UIApplicationDelegate,UITabBarDelegate>{
+ 
+    UITabBarController* tabBarController;
+}
 
 @property (strong, nonatomic) UIWindow *window;
+- (NSString*) readyDatabase:(NSString*)dbName;
 
 @end
